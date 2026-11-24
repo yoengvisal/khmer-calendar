@@ -372,4 +372,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get themeRoyal => '皇家蓝';
+
+  @override
+  String get themeOcean => '海洋';
+
+  @override
+  String get themePastel => '马卡龙';
+
+  @override
+  String get themeAurora => '极光';
+
+  @override
+  String get themeKitty => '小猫';
+
+  @override
+  String get themePuppy => '小狗';
+
+  @override
+  String get themeBuddha => '佛光';
 }

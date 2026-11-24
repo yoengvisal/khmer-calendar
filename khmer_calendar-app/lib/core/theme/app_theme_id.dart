@@ -7,7 +7,13 @@ enum AppThemeId {
   lotus('lotus'),
   green('green'),
   sunset('sunset'),
-  royal('royal');
+  royal('royal'),
+  ocean('ocean'),
+  pastel('pastel'),
+  aurora('aurora'),
+  kitty('kitty'),
+  puppy('puppy'),
+  buddha('buddha');
 
   const AppThemeId(this.code);
 

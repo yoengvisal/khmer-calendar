@@ -377,4 +377,22 @@ class AppLocalizationsKm extends AppLocalizations {
 
   @override
   String get themeRoyal => 'ខៀវរាជ';
+
+  @override
+  String get themeOcean => 'មហាសមុទ្រ';
+
+  @override
+  String get themePastel => 'ពណ៌ស្រាល';
+
+  @override
+  String get themeAurora => 'ពន្លឺប៉ូល';
+
+  @override
+  String get themeKitty => 'ឆ្មាតូច';
+
+  @override
+  String get themePuppy => 'កូនឆ្កែ';
+
+  @override
+  String get themeBuddha => 'ព្រះពុទ្ធ';
 }

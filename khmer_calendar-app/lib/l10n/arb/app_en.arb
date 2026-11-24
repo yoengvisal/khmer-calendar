@@ -166,5 +166,11 @@
   "themeLotus": "Lotus",
   "themeGreen": "Green Nature",
   "themeSunset": "Sunset",
-  "themeRoyal": "Royal Blue"
+  "themeRoyal": "Royal Blue",
+  "themeOcean": "Ocean",
+  "themePastel": "Pastel",
+  "themeAurora": "Aurora",
+  "themeKitty": "Kitty",
+  "themePuppy": "Puppy",
+  "themeBuddha": "Buddha"
 }

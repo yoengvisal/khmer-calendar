@@ -92,4 +92,28 @@ void main() {
     expect(find.byKey(const Key('language-selector')), findsOneWidget);
     expect(find.byKey(const Key('environment-tile')), findsNothing);
   });
+
+  testWidgets('the Today button shows the date and returns to this month', (
+    tester,
+  ) async {
+    await pumpApp(tester, prefs: {SettingsRepositoryImpl.languageKey: 'en'});
+
+    final todayButton = find.byKey(const Key('today-button'));
+    expect(
+      find.descendant(of: todayButton, matching: find.text('15')),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byTooltip('Next month'));
+    await tester.pumpAndSettle();
+    expect(find.text('May 2025'), findsOneWidget);
+
+    await tester.tap(find.text('Events'));
+    await tester.pumpAndSettle();
+    expect(find.text('Holidays 2025'), findsOneWidget);
+
+    await tester.tap(todayButton);
+    await tester.pumpAndSettle();
+    expect(find.text('April 2025'), findsOneWidget);
+  });
 }

@@ -14,6 +14,12 @@ String themeName(AppThemeId id, AppLocalizations l10n) => switch (id) {
   AppThemeId.green => l10n.themeGreen,
   AppThemeId.sunset => l10n.themeSunset,
   AppThemeId.royal => l10n.themeRoyal,
+  AppThemeId.ocean => l10n.themeOcean,
+  AppThemeId.pastel => l10n.themePastel,
+  AppThemeId.aurora => l10n.themeAurora,
+  AppThemeId.kitty => l10n.themeKitty,
+  AppThemeId.puppy => l10n.themePuppy,
+  AppThemeId.buddha => l10n.themeBuddha,
 };
 
 /// Light / Dark / System and the illustrated theme picker.

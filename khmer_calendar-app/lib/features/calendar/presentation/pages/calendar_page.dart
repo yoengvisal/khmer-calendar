@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/brand_logo.dart';
+import '../../../../core/widgets/frosted_glass.dart';
 import '../../../../core/widgets/status_views.dart';
 import '../../../my_events/domain/entities/personal_event.dart';
 import '../../../my_events/presentation/bloc/my_events_cubit.dart';
@@ -20,21 +21,19 @@ import '../widgets/day_detail_sheet.dart';
 import '../widgets/month_card.dart';
 import '../widgets/today_card.dart';
 
-/// Home: illustrated header, Today card, the month card, then weather.
+/// Home: illustrated header, the month card, Today card, then weather.
 /// Expects [CalendarBloc], [MyEventsCubit] and [SettingsCubit] above it
 /// (and a WeatherCubit for the weather card).
 class CalendarPage extends StatelessWidget {
   const CalendarPage({
     required this.lunar,
     this.onOpenSettings,
-    this.onOpenSearch,
     this.onOpenWeather,
     super.key,
   });
 
   final KhmerLunarCalendar lunar;
   final VoidCallback? onOpenSettings;
-  final VoidCallback? onOpenSearch;
   final VoidCallback? onOpenWeather;
 
   static const double _sceneHeight = 262;
@@ -101,10 +100,29 @@ class CalendarPage extends StatelessWidget {
                         subtitle: context.uiLanguage == UiLanguage.km
                             ? 'Khmer Calendar'
                             : 'ប្រតិទិនខ្មែរ',
-                        onSearch: onOpenSearch,
                         onSettings: onOpenSettings,
                       ),
-                      const SizedBox(height: 86),
+                      const SizedBox(height: 14),
+                      if (month != null) _EventsStatusBanner(month: month),
+                      // Frosted so the wallpaper glows through softly.
+                      FrostedGlass(
+                        child: MonthCard(
+                          visibleMonth: state.visibleMonth,
+                          month: state.status == CalendarStatus.success
+                              ? month
+                              : null,
+                          today: state.today,
+                          personalEvents: mine,
+                          showLunarDays: showLunarDays,
+                          onPrevious: () =>
+                              bloc.add(const CalendarMonthShifted(-1)),
+                          onNext: () => bloc.add(const CalendarMonthShifted(1)),
+                          onPickMonth: () =>
+                              _pickMonth(context, state.visibleMonth),
+                          onDayTap: (day) => openDay(day, mine),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       TodayCard(
                         day: todayDay,
                         // Back to this month first; then show the day's details.
@@ -112,26 +130,9 @@ class CalendarPage extends StatelessWidget {
                             ? () => openDay(todayDay, mine)
                             : () => bloc.add(const CalendarTodayRequested()),
                       ),
+                      // Weather is secondary: below the month and today.
                       const SizedBox(height: 10),
-                      if (month != null) _EventsStatusBanner(month: month),
-                      MonthCard(
-                        visibleMonth: state.visibleMonth,
-                        month: state.status == CalendarStatus.success
-                            ? month
-                            : null,
-                        today: state.today,
-                        personalEvents: mine,
-                        showLunarDays: showLunarDays,
-                        onPrevious: () =>
-                            bloc.add(const CalendarMonthShifted(-1)),
-                        onNext: () => bloc.add(const CalendarMonthShifted(1)),
-                        onPickMonth: () =>
-                            _pickMonth(context, state.visibleMonth),
-                        onDayTap: (day) => openDay(day, mine),
-                      ),
-                      // Weather is secondary: below the month.
-                      const SizedBox(height: 10),
-                      WeatherCard(onTap: onOpenWeather),
+                      FrostedGlass(child: WeatherCard(onTap: onOpenWeather)),
                     ],
                   ),
                 ),
@@ -199,16 +200,10 @@ class _Scene extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({
-    required this.title,
-    required this.subtitle,
-    this.onSearch,
-    this.onSettings,
-  });
+  const _Header({required this.title, required this.subtitle, this.onSettings});
 
   final String title;
   final String subtitle;
-  final VoidCallback? onSearch;
   final VoidCallback? onSettings;
 
   @override
@@ -263,12 +258,6 @@ class _Header extends StatelessWidget {
           ),
         ),
         round(
-          Icons.search_rounded,
-          l10n.search,
-          onSearch,
-          const Key('search-button'),
-        ),
-        round(
           Icons.settings_rounded,
           l10n.navSettings,
           onSettings,
@@ -289,7 +278,8 @@ class _EventsStatusBanner extends StatelessWidget {
     final l10n = context.l10n;
     final banner = switch (month.eventsAvailability) {
       EventsAvailability.live => null,
-      EventsAvailability.cached => InfoBanner(message: l10n.offlineBanner),
+      // Saved data is fine to show silently on the home screen.
+      EventsAvailability.cached => null,
       EventsAvailability.unavailable => InkWell(
         onTap: () =>
             context.read<CalendarBloc>().add(const CalendarRefreshRequested()),

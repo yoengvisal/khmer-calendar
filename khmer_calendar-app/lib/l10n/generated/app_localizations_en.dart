@@ -378,4 +378,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeRoyal => 'Royal Blue';
+
+  @override
+  String get themeOcean => 'Ocean';
+
+  @override
+  String get themePastel => 'Pastel';
+
+  @override
+  String get themeAurora => 'Aurora';
+
+  @override
+  String get themeKitty => 'Kitty';
+
+  @override
+  String get themePuppy => 'Puppy';
+
+  @override
+  String get themeBuddha => 'Buddha';
 }
