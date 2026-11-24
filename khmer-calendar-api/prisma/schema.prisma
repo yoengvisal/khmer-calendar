@@ -1,0 +1,93 @@
+generator client {
+  provider               = "prisma-client"
+  output                 = "../src/generated/prisma"
+  runtime                = "nodejs"
+  moduleFormat           = "esm"
+  importFileExtension    = "js"
+  generatedFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+}
+
+enum EventCategory {
+  PUBLIC_HOLIDAY
+  BUDDHIST_HOLY_DAY
+  CULTURAL
+  OBSERVANCE
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique @db.VarChar(254)
+  passwordHash  String         @map("password_hash")
+  displayName   String         @map("display_name") @db.VarChar(120)
+  role          UserRole       @default(EDITOR)
+  isActive      Boolean        @default(true) @map("is_active")
+  lastLoginAt   DateTime?      @map("last_login_at") @db.Timestamptz(3)
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  refreshTokens RefreshToken[]
+  createdEvents Event[]        @relation("EventCreatedBy")
+  updatedEvents Event[]        @relation("EventUpdatedBy")
+
+  @@map("users")
+}
+
+/// Rotating refresh tokens. Only a SHA-256 hash is stored. All tokens issued
+/// from one login share a familyId so reuse of a revoked token can revoke the family.
+model RefreshToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  familyId   String    @map("family_id") @db.Uuid
+  tokenHash  String    @unique @map("token_hash") @db.Char(64)
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz(3)
+  revokedAt  DateTime? @map("revoked_at") @db.Timestamptz(3)
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([familyId])
+  @@map("refresh_tokens")
+}
+
+model Event {
+  id            String        @id @default(uuid()) @db.Uuid
+  titleKm       String        @map("title_km") @db.VarChar(200)
+  titleEn       String        @map("title_en") @db.VarChar(200)
+  /// Simplified Chinese. Optional: clients fall back to titleEn.
+  titleZh       String?       @map("title_zh") @db.VarChar(200)
+  descriptionKm String?       @map("description_km") @db.Text
+  descriptionEn String?       @map("description_en") @db.Text
+  descriptionZh String?       @map("description_zh") @db.Text
+  category      EventCategory
+  status        EventStatus   @default(DRAFT)
+  startDate     DateTime      @map("start_date") @db.Date
+  endDate       DateTime      @map("end_date") @db.Date
+  isDayOff      Boolean       @default(false) @map("is_day_off")
+  /// Set for events generated from a holiday rule, e.g. "lunar:visakha-bochea:2026".
+  sourceKey     String?       @unique @map("source_key") @db.VarChar(100)
+  createdById   String?       @map("created_by_id") @db.Uuid
+  updatedById   String?       @map("updated_by_id") @db.Uuid
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  publishedAt   DateTime?     @map("published_at") @db.Timestamptz(3)
+  createdBy     User?         @relation("EventCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy     User?         @relation("EventUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([status, startDate, endDate])
+  @@index([startDate])
+  @@map("events")
+}

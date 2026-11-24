@@ -1,0 +1,11 @@
+# Launcher icons for the staging flavor. Masters come from branding/build_logo.py (repo root).
+# Regenerate: fvm dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/launcher_icons/app-icon-staging-1024.png"
+  remove_alpha_ios: true
+  adaptive_icon_background: "assets/launcher_icons/adaptive-background-1024.png"
+  adaptive_icon_foreground: "assets/launcher_icons/adaptive-foreground-staging-1024.png"
+  adaptive_icon_monochrome: "assets/launcher_icons/adaptive-monochrome-1024.png"
+  adaptive_icon_foreground_inset: 0  # artwork already sits inside the 66dp safe zone

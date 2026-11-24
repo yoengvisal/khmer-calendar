@@ -1,0 +1,38 @@
+.login {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+}
+
+.login__card {
+  width: min(100%, 24rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6);
+}
+
+.login__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.login__logo {
+  display: block;
+  flex: none;
+}
+
+.login__title {
+  font-size: var(--text-lg);
+}
+
+.login__subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.login__brand .badge {
+  margin-left: auto;
+}

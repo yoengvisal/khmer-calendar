@@ -1,0 +1,19 @@
+# Local infrastructure only (no app containers). `docker compose up -d`
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: khmer_calendar
+      POSTGRES_PASSWORD: local-dev-only
+      POSTGRES_DB: khmer_calendar_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./khmer-calendar-api/docker/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U khmer_calendar"]
+      interval: 5s
+      retries: 10
+volumes:
+  pgdata:

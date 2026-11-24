@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calendar UI Concepts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Moul&family=Noto+Serif+Khmer:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet">
+<style>
+/* ---------- page ---------- */
+:root{--page-bg:#EFE9DC;--page-ink:#14213D;--page-muted:#5B6478;--page-card:#FFFDF8;--page-line:#E3D8C2}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--page-bg:#0A1230;--page-ink:#F2EEE4;--page-muted:#A9B1C9;--page-card:#111B42;--page-line:#22305F}}
+:root[data-theme=dark]{--page-bg:#0A1230;--page-ink:#F2EEE4;--page-muted:#A9B1C9;--page-card:#111B42;--page-line:#22305F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page-bg);color:var(--page-ink);font-family:'Kantumruy Pro','Noto Sans SC',system-ui,sans-serif}
+.top{max-width:1440px;margin:0 auto;padding:36px 16px 8px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between}
+.top h1{margin:0;font-size:clamp(24px,3.4vw,38px);line-height:1.15;display:flex;gap:14px;align-items:center}
+.top h1 svg{width:52px;height:52px;flex:none}
+.top p{margin:6px 0 0;color:var(--page-muted);max-width:720px}
+.switch{display:flex;gap:4px;background:var(--page-card);border:1px solid var(--page-line);border-radius:999px;padding:4px}
+.switch button{border:0;background:transparent;color:var(--page-ink);font:inherit;padding:8px 16px;border-radius:999px;cursor:pointer}
+.switch button[aria-pressed=true]{background:#0E2A6B;color:#fff}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ghost{border:1px solid var(--page-line);background:var(--page-card);color:var(--page-ink);border-radius:999px;padding:8px 14px;font:inherit;cursor:pointer}
+.design{max-width:1440px;margin:24px auto;padding:0 16px}
+.design__card{background:var(--page-card);border:1px solid var(--page-line);border-radius:28px;overflow:hidden}
+.design__meta{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;padding:22px 26px;border-bottom:1px solid var(--page-line)}
+.design__num{background:#C8102E;color:#fff;font-weight:700;border-radius:10px;padding:4px 10px}
+.design__name{margin:0;font-size:22px}
+.design__km{color:var(--page-muted);font-size:15px}
+.design__desc{flex:1 1 420px;margin:0;color:var(--page-muted);font-size:14px;line-height:1.6}
+.swatches{display:flex;gap:6px}.swatches i{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.12)}
+.phones{display:flex;gap:26px;padding:28px 26px 30px;overflow-x:auto;scroll-snap-type:x mandatory}
+.shot{flex:none;scroll-snap-align:start;display:flex;flex-direction:column;gap:10px;align-items:center}
+.shot figcaption{font-size:13px;color:var(--page-muted)}
+footer{max-width:1440px;margin:0 auto;padding:8px 16px 56px;color:var(--page-muted);font-size:13px;line-height:1.6}
+
+/* ---------- phone frame ---------- */
+.phone{position:relative;width:320px;height:680px;border-radius:44px;padding:9px;background:#0B0B0F;box-shadow:0 24px 48px -18px rgba(7,22,64,.45),0 0 0 1px rgba(255,255,255,.06) inset}
+.screen{position:relative;width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:13px}
+.screen *{box-sizing:border-box}
+.status{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:600;position:relative;z-index:3}
+.status .island{position:absolute;left:50%;top:8px;width:84px;height:22px;margin-left:-42px;background:#000;border-radius:20px}
+.status .icons{display:flex;gap:5px;align-items:center}.status .icons i{display:block;width:15px;height:9px;border-radius:2px;background:currentColor;opacity:.85}
+.body{position:absolute;inset:34px 0 0 0;overflow:hidden;display:flex;flex-direction:column}
+.scroll{flex:1;overflow:hidden;padding-bottom:84px}
+
+/* app bar */
+.appbar{display:flex;align-items:center;gap:10px;padding:6px 16px 4px}
+.appbar .logo{width:30px;height:30px;flex:none}
+.appbar .title{font-family:var(--font-head);font-size:var(--title-size,17px);font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12px;color:var(--primary);background:var(--chip-bg,transparent);white-space:nowrap}
+
+/* month header */
+.mhead{padding:6px 16px 8px;text-align:var(--mhead-align,center)}
+.mhead .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mhead .month{font-family:var(--font-head);font-size:var(--month-size,22px);font-weight:700;letter-spacing:var(--month-track,0);flex:1;text-align:var(--mhead-align,center)}
+.mhead .arrow{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--muted);border:1px solid var(--line)}
+.mhead .lunar{color:var(--primary);font-weight:600;font-size:13px;margin-top:4px}
+.mhead .meta{color:var(--muted);font-size:11.5px;margin-top:2px}
+
+/* grid */
+.wk,.grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px}
+.wk div{text-align:center;font-size:11px;font-weight:600;color:var(--muted);padding:4px 0}
+.wk div:first-child{color:var(--holiday)}
+.grid{row-gap:var(--row-gap,4px);column-gap:var(--col-gap,0)}
+.cell{position:relative;height:var(--cell-h,62px);border-radius:var(--cell-radius,12px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:var(--cell-bg,transparent);border:var(--cell-border,0)}
+.cell .g{font-size:var(--g-size,16px);font-weight:600;font-family:var(--font-num)}
+.cell .l{font-size:9.5px;color:var(--muted);white-space:nowrap}
+.cell .dots{display:flex;gap:2px;height:5px}.cell .dots i{width:5px;height:5px;border-radius:50%;background:var(--event)}
+.cell.off .g{color:var(--holiday)}.cell.off{background:var(--off-bg,transparent)}
+.cell.off .dots i{background:var(--holiday)}
+.cell .holy{position:absolute;top:4px;right:5px;width:8px;height:8px;color:var(--holy)}
+.cell.today{background:var(--today-bg);border-color:transparent}
+.cell.today .g,.cell.today .l{color:var(--today-fg)}
+.cell.today .holy{color:var(--today-fg)}
+.cell.blank{visibility:hidden}
+.cell.sel{outline:2px solid var(--primary);outline-offset:-2px}
+.legend{display:flex;gap:12px;justify-content:center;font-size:10.5px;color:var(--muted);padding:10px 0 4px}
+.legend span{display:inline-flex;align-items:center;gap:4px}.legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+/* cards */
+.card{margin:10px 14px 0;border-radius:var(--card-radius,18px);background:var(--surface);border:1px solid var(--line);padding:12px 14px}
+.next .k{font-size:11px;color:var(--muted);text-transform:var(--k-transform,none);letter-spacing:var(--k-track,0)}
+.next .t{font-family:var(--font-head);font-weight:700;font-size:15px;margin-top:3px;line-height:1.35}
+.next .d{font-size:12px;color:var(--muted);margin-top:3px;display:flex;justify-content:space-between;gap:8px}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:600;background:var(--badge-bg);color:var(--badge-fg);white-space:nowrap}
+
+/* bottom nav */
+.nav{position:absolute;z-index:3;left:0;right:0;bottom:0;height:78px;display:flex;justify-content:space-around;align-items:flex-start;padding:10px 12px 0;background:var(--nav-bg);border-top:1px solid var(--line);backdrop-filter:blur(14px)}
+.nav.float{left:16px;right:16px;bottom:16px;height:62px;border-radius:999px;align-items:center;padding:0 8px;border:1px solid var(--line);box-shadow:0 10px 24px -12px rgba(0,0,0,.4)}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;color:var(--muted);min-width:70px}
+.nav a svg{width:22px;height:22px}
+.nav a span{white-space:nowrap}
+.nav a.on{color:var(--primary);font-weight:600}
+.nav a.on .pill{background:var(--nav-pill);border-radius:999px;padding:3px 16px}
+.nav.float a.on{background:var(--nav-pill);border-radius:999px;padding:8px 12px;flex-direction:row;gap:6px;min-width:0}
+.nav.float a:not(.on) span:last-child{display:none}
+.home-ind{position:absolute;bottom:7px;left:50%;width:110px;height:4px;margin-left:-55px;border-radius:4px;background:var(--text);opacity:.35;z-index:5}
+
+/* day sheet */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.42);z-index:4}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:72%;z-index:5;background:var(--sheet-bg,var(--bg));border-radius:28px 28px 0 0;padding:10px 18px 20px;overflow:hidden;box-shadow:0 -10px 30px rgba(0,0,0,.25)}
+.sheet .grab{width:38px;height:4px;border-radius:4px;background:var(--muted);opacity:.5;margin:0 auto 12px}
+.sheet .big{display:flex;gap:14px;align-items:center}
+.sheet .num{width:64px;height:64px;border-radius:18px;background:var(--today-bg);color:var(--today-fg);display:grid;place-items:center;font-family:var(--font-num);font-size:28px;font-weight:700;flex:none}
+.sheet .dt{font-family:var(--font-head);font-size:16px;font-weight:700;line-height:1.35}
+.sheet .sub{color:var(--muted);font-size:12px;margin-top:2px}
+.sheet h4{margin:16px 0 6px;font-size:11.5px;color:var(--muted);font-weight:600;text-transform:var(--k-transform,none);letter-spacing:var(--k-track,0)}
+.lunar-box{border-radius:16px;background:var(--surface);border:1px solid var(--line);padding:12px;line-height:1.6;font-size:13px}
+.moonrow{display:flex;gap:12px;align-items:center}
+.moonrow>svg{width:46px;height:46px;flex:none}
+.badge svg{flex:none}
+.ev{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.ev:last-child{border-bottom:0}
+.ev .bar{width:4px;align-self:stretch;border-radius:4px;background:var(--event)}
+.ev.off .bar{background:var(--holiday)}
+.ev .tt{font-weight:600;line-height:1.4}
+.ev .dd{font-size:11.5px;color:var(--muted);margin-top:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+
+/* holidays */
+.htitle{display:flex;align-items:center;justify-content:space-between;padding:4px 16px 6px}
+.htitle h2{margin:0;font-family:var(--font-head);font-size:20px}
+.filters{display:flex;gap:6px;padding:4px 14px 8px;overflow:hidden}
+.filters span{border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:11.5px;white-space:nowrap;color:var(--muted)}
+.filters span.on{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.mgroup{padding:8px 16px 2px;font-weight:700;color:var(--primary);font-size:12.5px;font-family:var(--font-head)}
+.hrow{display:flex;gap:12px;align-items:center;margin:0 14px;padding:9px 0;border-bottom:1px solid var(--line)}
+.hrow .date{width:46px;text-align:center;flex:none;border-radius:12px;padding:5px 0;background:var(--surface)}
+.hrow .date b{display:block;font-size:17px;font-family:var(--font-num)}
+.hrow .date small{display:block;font-size:9.5px;color:var(--muted)}
+.hrow.off .date b{color:var(--holiday)}
+.hrow .tt{font-weight:600;line-height:1.35;font-size:12.5px}
+.hrow .dd{font-size:11px;color:var(--muted);margin-top:2px}
+.hrow.past{opacity:.45}
+/* card-style holidays variant */
+.hcards .hrow{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:10px;margin:0 14px 8px}
+.hcards .hrow .date{background:var(--bg)}
+/* timeline variant */
+.htimeline .hrow{border-bottom:0;position:relative;padding-left:4px}
+.htimeline .hrow::before{content:'';position:absolute;left:26px;top:-6px;bottom:-6px;width:2px;background:var(--line);z-index:0}
+.htimeline .hrow .date{position:relative;z-index:1;border:1px solid var(--line)}
+
+/* settings */
+.sgroup{margin:12px 14px 0}
+.sgroup .lbl{font-size:11.5px;font-weight:600;color:var(--muted);margin:0 4px 6px;text-transform:var(--k-transform,none);letter-spacing:var(--k-track,0)}
+.seg{display:flex;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.seg span{flex:1;text-align:center;padding:9px 4px;font-size:12.5px;border-left:1px solid var(--line)}
+.seg span:first-child{border-left:0}
+.seg span.on{background:var(--primary);color:var(--on-primary);font-weight:600}
+.list{border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+.li{display:flex;align-items:center;gap:10px;padding:11px 12px;border-top:1px solid var(--line);font-size:12.5px}
+.li:first-child{border-top:0}
+.li .grow{flex:1}.li small{display:block;color:var(--muted);font-size:11px;margin-top:1px}
+.toggle{width:38px;height:22px;border-radius:999px;background:var(--line);position:relative;flex:none}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.toggle.on{background:var(--primary)}.toggle.on::after{left:19px;background:var(--on-primary)}
+.about{display:flex;gap:12px;align-items:center}
+.about svg{width:48px;height:48px;flex:none}
+
+/* hero (glass / festive) */
+.hero{margin:6px 14px 4px;border-radius:24px;padding:14px;display:flex;gap:14px;align-items:center;background:var(--hero-bg);color:var(--hero-fg);border:1px solid var(--line);position:relative;overflow:hidden}
+.hero svg.moon{width:72px;height:72px;flex:none}
+.hero .h1{font-family:var(--font-head);font-weight:700;font-size:20px;line-height:1.25}
+.hero .h2{font-size:12px;opacity:.85;margin-top:3px;line-height:1.4}
+
+/* ======================= THEMES ======================= */
+.t-royal{--bg:radial-gradient(120% 60% at 50% -10%,#1E3C8F 0%,#0B1E57 45%,#061232 100%);--surface:rgba(255,255,255,.06);--text:#F4EEDD;--muted:#A9B4D6;--line:rgba(247,218,134,.18);--primary:#F2C766;--on-primary:#0B1E57;--holiday:#FF7A8A;--holy:#F7DA86;--event:#8FB3FF;--today-bg:linear-gradient(160deg,#F7DA86,#D59A2E);--today-fg:#0B1E57;--badge-bg:rgba(247,218,134,.14);--badge-fg:#F7DA86;--nav-bg:rgba(6,18,50,.86);--nav-pill:rgba(247,218,134,.16);--font-head:'Noto Serif Khmer','Fraunces','Noto Serif SC',serif;--font-body:'Kantumruy Pro','Noto Sans SC',sans-serif;--font-num:'Fraunces','Noto Serif Khmer',serif;--sheet-bg:#0B1E57;--off-bg:rgba(255,122,138,.08);--k-transform:uppercase;--k-track:.08em;--month-track:.02em}
+.t-royal .screen::before{content:'';position:absolute;inset:0 0 auto 0;height:260px;pointer-events:none;background-image:radial-gradient(circle at 12px 18px,rgba(247,218,134,.7) 0 1px,transparent 1.6px),radial-gradient(circle at 74px 46px,rgba(255,255,255,.45) 0 .9px,transparent 1.4px),radial-gradient(circle at 44px 92px,rgba(247,218,134,.45) 0 .8px,transparent 1.3px),radial-gradient(circle at 96px 104px,rgba(255,255,255,.3) 0 .7px,transparent 1.2px);background-size:112px 118px;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent)}
+.t-royal .mhead .month{background:linear-gradient(180deg,#F7DA86,#D59A2E);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-royal .divider{height:1px;margin:2px 40px 8px;background:linear-gradient(90deg,transparent,#D59A2E,transparent)}
+
+.t-palm{--bg:repeating-linear-gradient(0deg,rgba(120,84,40,.035) 0 1px,transparent 1px 7px),linear-gradient(180deg,#F7EEDA,#EFE2C4);--surface:#FBF5E6;--text:#3A2412;--muted:#8A6B48;--line:#D9C5A0;--primary:#9C2A1B;--on-primary:#FBF5E6;--holiday:#B3261E;--holy:#B8862B;--event:#5C7A3A;--today-bg:#9C2A1B;--today-fg:#FBF5E6;--badge-bg:#F1E2C2;--badge-fg:#7A4A16;--nav-bg:#F3E7CC;--nav-pill:#E9D3A8;--font-head:'Moul','Fraunces','Noto Serif SC',serif;--font-body:'Noto Serif Khmer','Fraunces','Noto Serif SC',serif;--font-num:'Fraunces','Noto Serif Khmer',serif;--cell-border:1px solid transparent;--cell-radius:6px;--card-radius:10px;--title-size:15px;--month-size:20px;--off-bg:rgba(179,38,30,.06)}
+.t-palm .grid{column-gap:0;row-gap:0;border-top:1px solid var(--line);margin:0 12px;padding:0}
+.t-palm .grid .cell{border-radius:0;border-bottom:1px solid var(--line);height:60px}
+.t-palm .wk{padding:0 12px}
+.t-palm .cell.today{border-radius:8px}
+.t-palm .divider{height:12px;margin:2px auto 6px;width:180px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='12'%3E%3Cpath d='M0 6H70M110 6H180' stroke='%23B8862B' stroke-width='1'/%3E%3Cpath d='M90 0l6 6-6 6-6-6z M78 6l4-3 4 3-4 3z M94 6l4-3 4 3-4 3z' fill='%23B8862B'/%3E%3C/svg%3E") center/contain no-repeat}
+
+.t-modern{--bg:#FFFFFF;--surface:#F3F5FA;--text:#0E1530;--muted:#6B7390;--line:#E6E9F2;--primary:#0E2A6B;--on-primary:#fff;--holiday:#D92D20;--holy:#D59A2E;--event:#3A63D8;--today-bg:#0E2A6B;--today-fg:#fff;--badge-bg:#EEF2FC;--badge-fg:#0E2A6B;--nav-bg:rgba(255,255,255,.92);--nav-pill:#E8EDF9;--font-head:'Kantumruy Pro','Noto Sans SC',sans-serif;--font-body:'Kantumruy Pro','Noto Sans SC',sans-serif;--font-num:'Kantumruy Pro','Noto Sans SC',sans-serif;--mhead-align:left;--month-size:28px;--cell-radius:50%;--cell-h:40px;--row-gap:20px;--g-size:15px;--chip-bg:#F3F5FA}
+.t-modern .cell{width:40px;margin:0 auto}
+.t-modern .cell .l{position:absolute;bottom:-15px;font-size:8.5px}
+.t-modern .cell .dots{position:absolute;top:-1px;right:0}
+.t-modern .cell .holy{top:-2px;left:-1px;right:auto}
+.t-modern .cell.off{background:transparent}
+
+.t-glass{--bg:linear-gradient(165deg,#25307A 0%,#45307A 38%,#7A3B6E 64%,#0E1236 100%);--surface:rgba(255,255,255,.10);--text:#F6F3FF;--muted:#C9C3E8;--line:rgba(255,255,255,.16);--primary:#FFD27A;--on-primary:#251B4A;--holiday:#FF8FA3;--holy:#FFE3A3;--event:#9AD0FF;--today-bg:#FFD27A;--today-fg:#251B4A;--badge-bg:rgba(255,255,255,.14);--badge-fg:#fff;--nav-bg:rgba(30,24,70,.55);--nav-pill:rgba(255,210,122,.2);--hero-bg:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.04));--hero-fg:#fff;--font-head:'Kantumruy Pro','Noto Sans SC',sans-serif;--font-body:'Kantumruy Pro','Noto Sans SC',sans-serif;--font-num:'Kantumruy Pro','Noto Sans SC',sans-serif;--cell-h:50px;--sheet-bg:rgba(36,28,82,.92);--off-bg:rgba(255,143,163,.12)}
+.t-glass .gridwrap{margin:8px 12px 0;border-radius:24px;background:rgba(255,255,255,.07);border:1px solid var(--line);padding:6px 0 8px;backdrop-filter:blur(10px)}
+.t-glass .wk,.t-glass .grid{padding:0 4px}
+
+.t-festive{--bg:#FFF6EA;--surface:#FFFFFF;--text:#2A1414;--muted:#8C6A5A;--line:#F0DCC4;--primary:#C8102E;--on-primary:#fff;--holiday:#C8102E;--holy:#D59A2E;--event:#0E2A6B;--today-bg:#0E2A6B;--today-fg:#FFE8A8;--badge-bg:#FFE9CF;--badge-fg:#9C4A00;--nav-bg:#FFFFFF;--nav-pill:#FDE3E6;--hero-bg:linear-gradient(135deg,#C8102E,#8E0B20);--hero-fg:#FFF4D6;--font-head:'Kantumruy Pro','Noto Sans SC',sans-serif;--font-body:'Kantumruy Pro','Noto Sans SC',sans-serif;--font-num:'Kantumruy Pro','Noto Sans SC',sans-serif;--cell-bg:#FFFFFF;--cell-border:1px solid #F3E2CC;--cell-radius:14px;--cell-h:56px;--row-gap:5px;--col-gap:5px;--off-bg:#FFE7E9}
+.t-festive .band{background:linear-gradient(135deg,#C8102E,#8E0B20);color:#FFF4D6;padding-bottom:16px;position:relative}
+.t-festive .band::after{content:'';position:absolute;inset:auto 0 0 0;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cpath d='M0 14 Q7 0 14 14 Q21 0 28 14Z' fill='%23FFF6EA'/%3E%3C/svg%3E") repeat-x bottom/28px 14px}
+.t-festive .band .mhead .lunar{color:#FFD27A}.t-festive .band .mhead .meta{color:#FFE3C2}.t-festive .band .mhead .arrow{color:#FFE3C2;border-color:rgba(255,255,255,.3)}
+.t-festive .band .appbar .title{color:#FFF4D6}.t-festive .band .chip-btn{color:#FFF4D6;border-color:rgba(255,255,255,.35)}
+.t-festive .hero{--line:rgba(255,255,255,.2)}
+.t-festive .band .filters span{color:#FFE3C2;border-color:rgba(255,255,255,.35)}
+.t-festive .band .filters span.on{background:#FFD27A;border-color:#FFD27A;color:#8E0B20;font-weight:600}
+.t-festive .band .htitle h2{color:#FFF4D6}.t-festive .band .htitle .arrow{color:#FFE3C2;border-color:rgba(255,255,255,.35)!important}
+.t-festive .status{background:#C8102E;color:#FFF4D6}
+</style>
+</head>
+<body>
+<div class="top">
+  <div>
+    <h1><!--LOGO-->ប្រតិទិនខ្មែរ · 5 UI design concepts</h1>
+    <p>Each concept shows the four main screens with real data from your API (November 2026, today = 15). Switch the language to see every design in Khmer, English and Chinese. Scroll each row sideways on small screens.</p>
+  </div>
+  <div class="controls">
+    <div class="switch" role="group" aria-label="Mockup language">
+      <button data-lang="km" aria-pressed="true">ខ្មែរ</button><button data-lang="en" aria-pressed="false">English</button><button data-lang="zh" aria-pressed="false">中文</button>
+    </div>
+    <button class="ghost" id="pageTheme">Page light / dark</button>
+  </div>
+</div>
+<main id="designs"></main>
+<footer>
+  Concepts only, not built yet. "Reminders" in Settings is a proposed feature. All use the Kbach Kor logo and the brand palette (navy, gold, royal red, palm-leaf cream).
+  Fonts: Kantumruy Pro, Noto Serif Khmer, Moul (Khmer), Noto Sans/Serif SC (Chinese), Fraunces (Latin). All are open source via Google Fonts.
+  Pick a number, or combine (e.g. "2's look with 4's today card").
+</footer>
+
+<script>
+const DATA = /*__DATA__*/;
+const LOGO = `<!--LOGO-->`;
+
+// ---------------- i18n ----------------
+const KD = ['០','១','២','៣','៤','៥','៦','៧','៨','៩'];
+const kn = v => String(v).replace(/\d/g, d => KD[d]);
+const MONTHS = {
+  km: ['មករា','កុម្ភៈ','មីនា','មេសា','ឧសភា','មិថុនា','កក្កដា','សីហា','កញ្ញា','តុលា','វិច្ឆិកា','ធ្នូ'],
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+};
+const WD = {
+  km: ['អាទិត្យ','ចន្ទ','អង្គារ','ពុធ','ព្រហស្បតិ៍','សុក្រ','សៅរ៍'],
+  en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  zh: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+};
+const WDS = { km: ['អា','ច','អ','ពុ','ព្រ','សុ','ស'], en: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], zh: ['日','一','二','三','四','五','六'] };
+const LM = {
+  km: ['មិគសិរ','បុស្ស','មាឃ','ផល្គុន','ចេត្រ','ពិសាខ','ជេស្ឋ','អាសាឍ','ស្រាពណ៍','ភទ្របទ','អស្សុជ','កត្ដិក','បឋមាសាឍ','ទុតិយាសាឍ'],
+  en: ['Migasir','Boss','Meak','Phalkun','Cheit','Pisakh','Jesth','Asadh','Srap','Phatrabot','Assoch','Kadeuk','Pathamasadh','Tutiyasadh'],
+  zh: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月','前八月','后八月'].map(m => '柬历' + m),
+};
+const ANIMAL = {
+  km: ['ជូត','ឆ្លូវ','ខាល','ថោះ','រោង','ម្សាញ់','មមី','មមែ','វក','រកា','ច','កុរ'],
+  en: ['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'],
+  zh: ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'],
+};
+const SAK = { km: ['សំរឹទ្ធិស័ក','ឯកស័ក','ទោស័ក','ត្រីស័ក','ចត្វាស័ក','បញ្ចស័ក','ឆស័ក','សប្តស័ក','អដ្ឋស័ក','នព្វស័ក'],
+  en: ['Samridhi Sak','Ek Sak','To Sak','Trei Sak','Chattva Sak','Pancha Sak','Chha Sak','Sapta Sak','Attha Sak','Nup Sak'] };
+const ZHD = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+
+const T = {
+  km: { app:'ប្រតិទិនខ្មែរ', today:'ថ្ងៃនេះ', nav:['ប្រតិទិន','ថ្ងៃបុណ្យ','ការកំណត់'], holy:'ថ្ងៃសីល', off:'ឈប់សម្រាក', event:'ព្រឹត្តិការណ៍',
+        holidays:'ថ្ងៃបុណ្យ ឆ្នាំ', all:'ទាំងអស់', next:'ថ្ងៃបុណ្យបន្ទាប់', inDays:n=>`${kn(n)} ថ្ងៃទៀត`, days:n=>`${kn(n)} ថ្ងៃ`,
+        lunarDate:'ថ្ងៃខែចន្ទគតិ', events:'ព្រឹត្តិការណ៍', settings:'ការកំណត់', language:'ភាសា', theme:'រចនាប័ទ្ម', themes:['ប្រព័ន្ធ','ភ្លឺ','ងងឹត'],
+        reminders:'ការរំលឹក', remHoly:'រំលឹកថ្ងៃសីល', remHolySub:'ម៉ោង ៦ ព្រឹក មុនថ្ងៃសីល', remHoliday:'រំលឹកថ្ងៃបុណ្យ', remHolidaySub:'មុន ១ ថ្ងៃ',
+        about:'អំពី', version:'កំណែ ១.០.០', numerals:'លេខខ្មែរ', moon:'ព្រះចន្ទ', songkran:'ចូលឆ្នាំខ្មែរ',
+        cat:{PUBLIC_HOLIDAY:'ថ្ងៃឈប់សម្រាក',BUDDHIST_HOLY_DAY:'បុណ្យពុទ្ធសាសនា',CULTURAL:'វប្បធម៌',OBSERVANCE:'ទិវា'} },
+  en: { app:'Khmer Calendar', today:'Today', nav:['Calendar','Holidays','Settings'], holy:'Holy day', off:'Day off', event:'Event',
+        holidays:'Holidays', all:'All', next:'Next holiday', inDays:n=>`in ${n} days`, days:n=>`${n} days`,
+        lunarDate:'Lunar date', events:'Events', settings:'Settings', language:'Language', theme:'Theme', themes:['System','Light','Dark'],
+        reminders:'Reminders', remHoly:'Holy day reminder', remHolySub:'6:00 AM on Thngai Sel', remHoliday:'Holiday reminder', remHolidaySub:'1 day before',
+        about:'About', version:'Version 1.0.0', numerals:'Khmer numerals', moon:'Moon', songkran:'Khmer New Year',
+        cat:{PUBLIC_HOLIDAY:'Public holiday',BUDDHIST_HOLY_DAY:'Buddhist',CULTURAL:'Cultural',OBSERVANCE:'Observance'} },
+  zh: { app:'高棉日历', today:'今天', nav:['日历','节假日','设置'], holy:'持戒日', off:'放假', event:'活动',
+        holidays:'节假日', all:'全部', next:'下一个节日', inDays:n=>`还有 ${n} 天`, days:n=>`${n} 天`,
+        lunarDate:'柬历日期', events:'活动', settings:'设置', language:'语言', theme:'主题', themes:['跟随系统','浅色','深色'],
+        reminders:'提醒', remHoly:'持戒日提醒', remHolySub:'当天早上 6:00', remHoliday:'节日提醒', remHolidaySub:'提前 1 天',
+        about:'关于', version:'版本 1.0.0', numerals:'高棉数字', moon:'月相', songkran:'柬埔寨新年',
+        cat:{PUBLIC_HOLIDAY:'公共假日',BUDDHIST_HOLY_DAY:'佛教节日',CULTURAL:'传统文化',OBSERVANCE:'纪念日'} },
+};
+
+const num = (lang, v) => lang === 'km' ? kn(v) : String(v);
+const monthYear = (lang, y, m) => lang === 'km' ? `${MONTHS.km[m-1]} ${kn(y)}` : lang === 'zh' ? `${y}年${m}月` : `${MONTHS.en[m-1]} ${y}`;
+const parse = iso => { const [y,m,d] = iso.split('-').map(Number); return {y,m,d,dow:new Date(Date.UTC(y,m-1,d)).getUTCDay()}; };
+const fullDate = (lang, iso) => { const {y,m,d,dow} = parse(iso);
+  return lang === 'km' ? `ថ្ងៃ${WD.km[dow]} ${kn(d)} ${MONTHS.km[m-1]} ${kn(y)}` : lang === 'zh' ? `${y}年${m}月${d}日 ${WD.zh[dow]}` : `${WD.en[dow]}, ${d} ${MONTHS.en[m-1]} ${y}`; };
+const shortDate = (lang, iso) => { const {m,d} = parse(iso); return lang === 'km' ? `${kn(d)} ${MONTHS.km[m-1]}` : lang === 'zh' ? `${m}月${d}日` : `${d} ${MONTHS.en[m-1].slice(0,3)}`; };
+const range = (lang, a, b) => a === b ? shortDate(lang, a) : `${shortDate(lang, a)} – ${shortDate(lang, b)}`;
+const dayNo = l => (l.moonPhase === 'WAXING' ? 0 : 15) + l.day - 1;
+const lunarDay = (lang, l) => lang === 'km' ? `${kn(l.day)}${l.moonPhase === 'WAXING' ? 'កើត' : 'រោច'}` : lang === 'zh' ? ZHD[dayNo(l)] : `${l.day} ${l.moonPhase === 'WAXING' ? 'Kert' : 'Roch'}`;
+const lunarLong = (lang, l, dow) => lang === 'km'
+  ? `ថ្ងៃ${WD.km[dow]} ${lunarDay('km', l)} ខែ${LM.km[l.monthIndex]} ឆ្នាំ${ANIMAL.km[l.animalYear]} ${SAK.km[l.sak]} ពុទ្ធសករាជ ${kn(l.beYear)}`
+  : lang === 'zh' ? `${LM.zh[l.monthIndex]}${lunarDay('zh', l)} · ${ANIMAL.zh[l.animalYear]}年 · 佛历${l.beYear}`
+  : `${lunarDay('en', l)}, month of ${LM.en[l.monthIndex]} · Year of the ${ANIMAL.en[l.animalYear]} · ${SAK.en[l.sak]} · BE ${l.beYear}`;
+const title = (lang, e) => lang === 'km' ? e.titleKm : lang === 'zh' ? (e.titleZh || e.titleEn) : e.titleEn;
+const yearMeta = (lang, l) => lang === 'km' ? `ឆ្នាំ${ANIMAL.km[l.animalYear]} · ${SAK.km[l.sak]} · ព.ស. ${kn(l.beYear)}`
+  : lang === 'zh' ? `${ANIMAL.zh[l.animalYear]}年 · 佛历${l.beYear}` : `Year of the ${ANIMAL.en[l.animalYear]} · ${SAK.en[l.sak]} · BE ${l.beYear}`;
+
+// ---------------- icons ----------------
+const I = {
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>',
+  gear:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M5.5 18.5l1.7-1.7M16.8 7.2l1.7-1.7"/></svg>',
+  left:'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 6l-6 6 6 6"/></svg>',
+  right:'<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>',
+  crescent:'<svg viewBox="0 0 10 10"><path d="M6.5 0.6A4.6 4.6 0 1 0 9.4 7.2 3.6 3.6 0 1 1 6.5 0.6z" fill="currentColor"/></svg>',
+};
+function moon(l, size = 72, lit = '#FFE3A3', dark = 'rgba(255,255,255,.12)') {
+  // Illuminated fraction from the lunar day: waxing grows to full on 15 Kert, waning shrinks to new.
+  const n = dayNo(l), k = n < 15 ? (n + 1) / 15 : (29 - n) / 15, r = 46, c = 50;
+  const rx = Math.abs(1 - 2 * k) * r, sweep = k < 0.5 ? 0 : 1, waxing = n < 15;
+  const d = `M${c} ${c-r}A${r} ${r} 0 0 1 ${c} ${c+r}A${rx.toFixed(1)} ${r} 0 0 ${sweep} ${c} ${c-r}Z`;
+  return `<svg class="moon" viewBox="0 0 100 100" width="${size}" height="${size}"><circle cx="50" cy="50" r="46" fill="${dark}"/>${k >= .99 ? `<circle cx="50" cy="50" r="46" fill="${lit}"/>` : `<path d="${d}" fill="${lit}" ${waxing ? '' : 'transform="translate(100 0) scale(-1 1)"'}/>`}</svg>`;
+}
+
+// ---------------- data helpers ----------------
+const MONTH = DATA.month, TODAY = '2026-11-15', SELECTED = '2026-11-24';
+const dayByIso = Object.fromEntries(MONTH.days.map(d => [d.date, d]));
+const todayDay = dayByIso[TODAY];
+const upcoming = DATA.events.filter(e => e.endDate >= TODAY).sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
+const daysUntil = iso => Math.round((Date.UTC(...iso.split('-').map((v, i) => i === 1 ? v - 1 : +v)) - Date.UTC(2026, 10, 15)) / 86400000);
+
+// ---------------- screens ----------------
+const statusBar = () => `<div class="status"><span>9:41</span><span class="island"></span><span class="icons"><i></i><i style="width:20px"></i></span></div>`;
+const nav = (lang, active, float) => `<nav class="nav ${float ? 'float' : ''}">${[I.cal, I.star, I.gear].map((ic, i) =>
+  `<a class="${i === active ? 'on' : ''}"><span class="pill">${ic}</span><span>${T[lang].nav[i]}</span></a>`).join('')}</nav><span class="home-ind"></span>`;
+const appbar = (lang) => `<div class="appbar"><span class="logo">${LOGO}</span><span class="title">${T[lang].app}</span><span class="chip-btn">${I.cal.replace('<svg', '<svg width="13" height="13"')}${T[lang].today}</span></div>`;
+
+function monthHeader(lang) {
+  const months = [...new Set(MONTH.days.map(d => d.lunar.monthIndex))];
+  const span = months.map(i => lang === 'km' ? LM.km[i] : LM[lang][i]).join(' – ');
+  return `<div class="mhead"><div class="row"><span class="arrow">${I.left}</span><span class="month">${monthYear(lang, 2026, 11)}</span><span class="arrow">${I.right}</span></div>
+    <div class="divider"></div><div class="lunar">${span}</div><div class="meta">${yearMeta(lang, todayDay.lunar)}</div></div>`;
+}
+
+function grid(lang, selected) {
+  const first = MONTH.days[0].dayOfWeek;
+  const blanks = Array.from({ length: first }, () => '<div class="cell blank"></div>').join('');
+  const cells = MONTH.days.map(d => {
+    const off = d.events.some(e => e.isDayOff), ev = d.events.length;
+    const cls = ['cell', off && 'off', d.date === TODAY && 'today', d.date === selected && 'sel'].filter(Boolean).join(' ');
+    return `<div class="${cls}">${d.lunar.isHolyDay ? `<span class="holy">${I.crescent}</span>` : ''}<span class="g">${num(lang, +d.date.slice(8))}</span>
+      <span class="l">${lunarDay(lang, d.lunar)}</span><span class="dots">${ev ? '<i></i>' : ''}</span></div>`;
+  }).join('');
+  return `<div class="gridwrap"><div class="wk">${WDS[lang].map(w => `<div>${w}</div>`).join('')}</div><div class="grid">${blanks}${cells}</div></div>`;
+}
+
+const legend = lang => `<div class="legend"><span><i style="background:var(--holy)"></i>${T[lang].holy}</span><span><i style="background:var(--event)"></i>${T[lang].event}</span><span><i style="background:var(--holiday)"></i>${T[lang].off}</span></div>`;
+
+function nextCard(lang) {
+  const e = upcoming, n = daysUntil(e.startDate);
+  return `<div class="card next"><div class="k">${T[lang].next}</div><div class="t">${title(lang, e)}</div>
+    <div class="d"><span>${range(lang, e.startDate, e.endDate)}</span><span class="badge">${T[lang].inDays(n)}</span></div></div>`;
+}
+
+function hero(lang) {
+  const l = todayDay.lunar;
+  return `<div class="hero">${moon(l)}<div><div class="h1">${lunarDay(lang, l)} · ${lang === 'km' ? 'ខែ' + LM.km[l.monthIndex] : LM[lang][l.monthIndex]}</div>
+    <div class="h2">${fullDate(lang, TODAY)}<br>${yearMeta(lang, l)}</div></div></div>`;
+}
+
+function calendarScreen(lang, d) {
+  const top = d.band
+    ? `<div class="band">${appbar(lang)}${monthHeader(lang)}</div>`
+    : `${appbar(lang)}${d.hero ? hero(lang) : ''}${monthHeader(lang)}`;
+  return `${top}${grid(lang)}${legend(lang)}${d.nextCard ? nextCard(lang) : ''}`;
+}
+
+function dayScreen(lang, d) {
+  const day = dayByIso[SELECTED], l = day.lunar, dow = day.dayOfWeek;
+  const evs = day.events.map(e => `<div class="ev ${e.isDayOff ? 'off' : ''}"><span class="bar"></span><div><div class="tt">${title(lang, e)}</div>
+    <div class="dd">${range(lang, e.startDate, e.endDate)}</div><div class="chips"><span class="badge">${T[lang].cat[e.category]}</span>${e.isDayOff ? `<span class="badge" style="background:var(--off-bg);color:var(--holiday)">${T[lang].off}</span>` : ''}</div></div></div>`).join('');
+  const moonColors = d.name === 'palm' ? ['#B8862B', '#EBDDBC'] : d.name === 'modern' || d.name === 'festive' ? ['#D59A2E', '#E8ECF5'] : ['#FFE3A3', 'rgba(255,255,255,.14)'];
+  return `${calendarScreen(lang, d)}<div class="scrim"></div><div class="sheet"><div class="grab"></div>
+    <div class="big"><div class="num">${num(lang, 24)}</div><div><div class="dt">${fullDate(lang, SELECTED)}</div><div class="sub">${lunarDay(lang, l)} · ${lang === 'km' ? 'ខែ' + LM.km[l.monthIndex] : LM[lang][l.monthIndex]}</div></div></div>
+    <h4>${T[lang].lunarDate}</h4>
+    <div class="lunar-box"><div class="moonrow">${moon(l, 46, ...moonColors)}<div>${lunarLong(lang, l, dow)}${l.isHolyDay ? `<div class="chips"><span class="badge">${I.crescent.replace('<svg', '<svg width="10" height="10" style="margin-right:4px"')}${T[lang].holy}</span></div>` : ''}</div></div></div>
+    <h4>${T[lang].events}</h4>${evs}</div>`;
+}
+
+function holidaysScreen(lang, d) {
+  const byMonth = {};
+  DATA.events.forEach(e => (byMonth[+e.startDate.slice(5, 7)] ??= []).push(e));
+  const rows = Object.entries(byMonth).filter(([m]) => +m >= 9).map(([m, evs]) =>
+    `<div class="mgroup">${lang === 'zh' ? `${m}月` : MONTHS[lang === 'km' ? 'km' : 'en'][m - 1]}</div>` + evs.map(e => {
+      const p = parse(e.startDate), past = e.endDate < TODAY;
+      const len = (Date.UTC(...e.endDate.split('-').map((v, i) => i === 1 ? v - 1 : +v)) - Date.UTC(...e.startDate.split('-').map((v, i) => i === 1 ? v - 1 : +v))) / 86400000 + 1;
+      return `<div class="hrow ${e.isDayOff ? 'off' : ''} ${past ? 'past' : ''}"><div class="date"><b>${num(lang, p.d)}</b><small>${WDS[lang][p.dow]}</small></div>
+        <div><div class="tt">${title(lang, e)}</div><div class="dd">${range(lang, e.startDate, e.endDate)}${len > 1 ? ' · ' + T[lang].days(len) : ''} · ${T[lang].cat[e.category]}</div></div></div>`;
+    }).join('')).join('');
+  const head = `<div class="htitle"><h2>${T[lang].holidays} ${num(lang, 2026)}</h2><span style="display:flex;gap:6px"><span class="arrow" style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line)">${I.left}</span><span class="arrow" style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line)">${I.right}</span></span></div>
+    <div class="filters"><span class="on">${T[lang].all}</span>${Object.values(T[lang].cat).slice(0, 3).map(c => `<span>${c}</span>`).join('')}</div>`;
+  const top = d.band ? `<div class="band">${appbar(lang)}<div style="padding:0 0 4px">${head}</div></div>` : `${appbar(lang)}${head}`;
+  return `${top}${d.nextCard || d.hero ? nextCard(lang) : ''}<div class="${d.holidays}" style="margin-top:6px">${rows}</div>`;
+}
+
+function settingsScreen(lang, d) {
+  const langs = [['km', 'ខ្មែរ'], ['en', 'English'], ['zh', '中文']];
+  const top = d.band ? `<div class="band">${appbar(lang)}<div class="htitle"><h2>${T[lang].settings}</h2></div></div>` : `${appbar(lang)}<div class="htitle"><h2>${T[lang].settings}</h2></div>`;
+  return `${top}
+    <div class="sgroup"><div class="lbl">${T[lang].language}</div><div class="seg">${langs.map(([c, n]) => `<span class="${c === lang ? 'on' : ''}">${n}</span>`).join('')}</div></div>
+    <div class="sgroup"><div class="lbl">${T[lang].theme}</div><div class="seg">${T[lang].themes.map((t, i) => `<span class="${i === 0 ? 'on' : ''}">${t}</span>`).join('')}</div></div>
+    <div class="sgroup"><div class="lbl">${T[lang].reminders}</div><div class="list">
+      <div class="li"><span class="grow">${T[lang].remHoly}<small>${T[lang].remHolySub}</small></span><span class="toggle on"></span></div>
+      <div class="li"><span class="grow">${T[lang].remHoliday}<small>${T[lang].remHolidaySub}</small></span><span class="toggle on"></span></div>
+      <div class="li"><span class="grow">${T[lang].numerals}</span><span class="toggle ${lang === 'km' ? 'on' : ''}"></span></div></div></div>
+    <div class="sgroup"><div class="lbl">${T[lang].about}</div><div class="list"><div class="li about">${LOGO}<span class="grow"><b>${T[lang].app}</b><small>${T[lang].version}</small></span></div></div></div>`;
+}
+
+// ---------------- designs ----------------
+const DESIGNS = [
+  { name: 'royal', cls: 't-royal', title: 'Royal Night', km: 'រាត្រីរាជវាំង', float: false, nextCard: true, holidays: 'hlist',
+    desc: 'Deep night-sky navy with gold serif headings and a faint kbach pattern, like gold leaf on lacquer. Calm and premium; ideal for reading the moon at night. Dark by default.',
+    swatches: ['#061232', '#0B1E57', '#F7DA86', '#D59A2E', '#FF7A8A'] },
+  { name: 'palm', cls: 't-palm', title: 'Palm-Leaf Manuscript', km: 'សាស្ត្រាស្លឹករឹត', float: false, nextCard: false, holidays: 'htimeline',
+    desc: 'Inspired by សាស្ត្រាស្លឹករឹត palm-leaf books: warm parchment, Moul headings, lacquer-red ink, ruled lines and a gold ornament divider. The most traditional and cultural.',
+    swatches: ['#F7EEDA', '#D9C5A0', '#9C2A1B', '#B8862B', '#3A2412'] },
+  { name: 'modern', cls: 't-modern', title: 'Modern Minimal', km: 'ទំនើប សាមញ្ញ', float: true, nextCard: true, holidays: 'hlist',
+    desc: 'Clean white with bold left-aligned type, round day markers and a floating pill navigation bar. Fast to scan and the easiest to build, with Khmer identity carried by the logo and navy.',
+    swatches: ['#FFFFFF', '#F3F5FA', '#0E2A6B', '#3A63D8', '#D92D20'] },
+  { name: 'glass', cls: 't-glass', title: 'Lunar Glass', km: 'កញ្ចក់ព្រះចន្ទ', float: true, hero: true, nextCard: false, holidays: 'hcards',
+    desc: 'A dusk-sky gradient with frosted-glass panels. A "today" card shows the real moon phase, the heart of a lunar calendar. The most emotional and modern; best on recent phones.',
+    swatches: ['#25307A', '#45307A', '#7A3B6E', '#FFD27A', '#FF8FA3'] },
+  { name: 'festive', cls: 't-festive', title: 'Temple Festival', km: 'ពិធីបុណ្យ', float: false, band: true, nextCard: true, holidays: 'hcards',
+    desc: 'A royal-red header band with a scalloped edge, tiled day cards and a countdown to the next festival. Bright and celebratory; puts holidays first.',
+    swatches: ['#C8102E', '#8E0B20', '#FFF6EA', '#0E2A6B', '#FFE8A8'] },
+];
+
+const SCREENS = [
+  ['Calendar', 0, calendarScreen], ['Day detail', 0, dayScreen], ['Holidays', 1, holidaysScreen], ['Settings', 2, settingsScreen],
+];
+
+function render(lang) {
+  document.getElementById('designs').innerHTML = DESIGNS.map((d, i) => `
+  <section class="design"><div class="design__card">
+    <div class="design__meta"><span class="design__num">${String(i + 1).padStart(2, '0')}</span>
+      <div><h2 class="design__name">${d.title}</h2><div class="design__km">${d.km}</div></div>
+      <p class="design__desc">${d.desc}</p><div class="swatches">${d.swatches.map(c => `<i style="background:${c}"></i>`).join('')}</div></div>
+    <div class="phones">${SCREENS.map(([label, active, fn]) => `<figure class="shot" style="margin:0"><div class="phone ${d.cls}"><div class="screen">${statusBar()}
+      <div class="body"><div class="scroll">${fn(lang, d)}</div>${nav(lang, active, d.float)}</div></div></div><figcaption>${label}</figcaption></figure>`).join('')}</div>
+  </div></section>`).join('');
+}
+
+document.querySelectorAll('.switch button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.switch button').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.documentElement.lang = b.dataset.lang === 'zh' ? 'zh-Hans' : b.dataset.lang;
+  render(b.dataset.lang);
+}));
+document.getElementById('pageTheme').addEventListener('click', () => {
+  const r = document.documentElement, dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  r.dataset.theme = dark ? 'light' : 'dark';
+});
+render(new URLSearchParams(location.search).get('lang') || 'km');
+if (new URLSearchParams(location.search).get('lang')) document.querySelectorAll('.switch button').forEach(x => x.setAttribute('aria-pressed', x.dataset.lang === new URLSearchParams(location.search).get('lang')));
+</script>
+</body>
+</html>

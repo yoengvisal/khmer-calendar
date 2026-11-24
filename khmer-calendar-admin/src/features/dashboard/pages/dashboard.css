@@ -1,0 +1,123 @@
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .dash-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.dash-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.dash-card--wide {
+  grid-column: 1 / -1;
+}
+
+.dash-card .card__header {
+  margin-bottom: 0;
+}
+
+.dash-card__cta {
+  align-self: flex-start;
+}
+
+.dash-stat {
+  font-size: 2.5rem;
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.dash-generate {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.dash-generate .field {
+  width: 8rem;
+}
+
+.dash-result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.dash-result__list {
+  margin: 0;
+  padding-left: var(--space-5);
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.upcoming {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.upcoming__item {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.upcoming__item:last-child {
+  border-bottom: 0;
+}
+
+.upcoming__date {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+}
+
+.upcoming__titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--text-sm);
+}
+
+.upcoming__km {
+  color: inherit;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-md);
+  text-decoration: none;
+}
+
+.upcoming__km:hover {
+  text-decoration: underline;
+}
+
+.upcoming__badges {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .upcoming__item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+
+  .upcoming__badges {
+    justify-content: flex-start;
+  }
+}

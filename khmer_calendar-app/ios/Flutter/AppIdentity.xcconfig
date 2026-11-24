@@ -1,0 +1,3 @@
+// App identity — the ONE place to change the iOS bundle identifier before a
+// store release. Flavors append APP_BUNDLE_ID_SUFFIX (see Flavors/*.xcconfig).
+APP_BUNDLE_ID_BASE = com.example.khmercalendar

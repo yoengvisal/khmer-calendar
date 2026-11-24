@@ -1,0 +1,170 @@
+{
+  "@@locale": "en",
+  "appTitle": "Khmer Calendar",
+  "navCalendar": "Calendar",
+  "navHolidays": "Holidays",
+  "navSettings": "Settings",
+  "today": "Today",
+  "previousMonth": "Previous month",
+  "nextMonth": "Next month",
+  "previousYear": "Previous year",
+  "nextYear": "Next year",
+  "holyDay": "Holy day (Thngai Sel)",
+  "dayOff": "Day off",
+  "beYear": "BE {year}",
+  "@beYear": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "animalYear": "Year of the {animal}",
+  "@animalYear": {
+    "placeholders": {
+      "animal": {
+        "type": "String"
+      }
+    }
+  },
+  "holidaysTitle": "Holidays {year}",
+  "@holidaysTitle": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "noEventsForYear": "No published holidays or events for this year yet.",
+  "offlineBanner": "Offline — showing saved data",
+  "eventsUnavailableBanner": "Couldn't load events. Lunar dates are still shown.",
+  "errorNetwork": "No internet connection. Check your connection and try again.",
+  "errorTimeout": "The server is taking too long to respond. Please try again.",
+  "errorServer": "Something went wrong on our side. Please try again later.",
+  "errorNotFound": "We couldn't find what you were looking for.",
+  "errorValidation": "The request was invalid. Please try again.",
+  "errorUnknown": "Something unexpected happened. Please try again.",
+  "retry": "Retry",
+  "settingsTitle": "Settings",
+  "language": "Language",
+  "languageKhmer": "ខ្មែរ",
+  "languageEnglish": "English",
+  "languageChinese": "中文",
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "about": "About",
+  "appVersion": "Version",
+  "environment": "Environment",
+  "dayDetailEvents": "Events",
+  "dayDetailNoEvents": "No events on this day.",
+  "lunarDate": "Lunar date",
+  "pastEvent": "Past",
+  "eventDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@eventDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryPublicHoliday": "Public holiday",
+  "categoryBuddhistHolyDay": "Buddhist holy day",
+  "categoryCultural": "Cultural",
+  "categoryObservance": "Observance",
+  "categoryOther": "Event",
+  "legendEvent": "Event",
+  "legendHoliday": "Public holiday (day off)",
+  "legendHolyDay": "Holy day",
+  "configErrorTitle": "Configuration error",
+  "nextHoliday": "Next holiday",
+  "tomorrow": "Tomorrow",
+  "inDays": "in {days} days",
+  "@inDays": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "ongoing": "Happening now",
+  "filterAll": "All",
+  "navEvents": "Events",
+  "navWeather": "Weather",
+  "navTools": "Tools",
+  "search": "Search",
+  "searchHint": "Search holidays and events",
+  "noResults": "No results",
+  "cityPhnomPenh": "Phnom Penh",
+  "weatherClear": "Clear",
+  "weatherPartlyCloudy": "Partly Cloudy",
+  "weatherCloudy": "Cloudy",
+  "weatherFog": "Fog",
+  "weatherDrizzle": "Drizzle",
+  "weatherRain": "Rain",
+  "weatherThunderstorm": "Thunderstorm",
+  "highLow": "H: {high}°  L: {low}°",
+  "@highLow": {
+    "placeholders": {
+      "high": {
+        "type": "String"
+      },
+      "low": {
+        "type": "String"
+      }
+    }
+  },
+  "rainChance": "Rain {percent}%",
+  "@rainChance": {
+    "placeholders": {
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "weatherForecast": "7-day forecast",
+  "weatherAttribution": "Weather data by Open-Meteo.com",
+  "weatherUnavailable": "Weather unavailable",
+  "waxingMoon": "Waxing Moon",
+  "waningMoon": "Waning Moon",
+  "legendPublicHoliday": "Public Holiday",
+  "legendBuddhistDay": "Buddhist Day",
+  "legendMyEvent": "My Event",
+  "legendOtherEvent": "Other Event",
+  "tabHolidays": "Holidays",
+  "tabMyEvents": "My Events",
+  "addEvent": "Add event",
+  "editEvent": "Edit event",
+  "eventTitleLabel": "Title",
+  "eventDateLabel": "Date",
+  "eventNoteLabel": "Note (optional)",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "titleRequired": "Please enter a title",
+  "noMyEvents": "No personal events yet. Tap + to add one.",
+  "eventDeleted": "Event deleted",
+  "undo": "Undo",
+  "toolConverter": "Date converter",
+  "toolConverterSub": "Gregorian date → Khmer lunar date",
+  "toolNewYear": "Khmer New Year",
+  "toolNewYearSub": "Songkran date and time for any year",
+  "toolHolyDays": "Holy days",
+  "toolHolyDaysSub": "Buddhist holy days (Thngai Sel) by month",
+  "pickDate": "Pick a date",
+  "newYearStart": "New Year begins (Moha Songkran)",
+  "newYearLerngSak": "Last day (Lerng Sak)",
+  "newYearTime": "Time",
+  "display": "Display",
+  "showLunarDays": "Show lunar days in calendar",
+  "themeDefaultSuffix": "(Default)",
+  "followDevice": "Follow device setting",
+  "moreThemes": "More Themes",
+  "themeKhmerLight": "Khmer Light",
+  "themeKhmerNight": "Khmer Night",
+  "themeLotus": "Lotus",
+  "themeGreen": "Green Nature",
+  "themeSunset": "Sunset",
+  "themeRoyal": "Royal Blue"
+}

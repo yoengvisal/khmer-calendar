@@ -1,0 +1,9 @@
+// dev flavor. Used as the PROJECT-level base configuration of
+// Debug-dev / Release-dev / Profile-dev.
+#include "../AppIdentity.xcconfig"
+
+APP_FLAVOR = dev
+APP_BUNDLE_ID_SUFFIX = .dev
+APP_DISPLAY_NAME = Khmer Calendar Dev
+// YES only for dev: lets the app call http://localhost (ATS exception).
+APP_ALLOW_LOCAL_HTTP = YES

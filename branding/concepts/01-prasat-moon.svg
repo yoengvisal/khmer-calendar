@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="t">
+  <title id="t">Khmer Calendar</title>
+  <!-- Concept: a calendar page holding the lunar month — waxing half (កើត) solid gold, waning half (រោច)
+       outlined — with a prasat rising on the line between them. Original artwork for this project. -->
+  <defs>
+    <linearGradient id="kc-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#123383"/><stop offset="1" stop-color="#071640"/></linearGradient>
+    <linearGradient id="kc-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7DA86"/><stop offset="1" stop-color="#D59A2E"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#kc-bg)"/>
+  <rect x="92" y="124" width="328" height="308" rx="44" fill="#FBF6EA"/>
+  <path d="M92 168a44 44 0 0 1 44-44h240a44 44 0 0 1 44 44v16H92z" fill="#C8102E"/>
+  <rect x="164" y="96" width="24" height="56" rx="12" fill="url(#kc-gold)"/>
+  <rect x="324" y="96" width="24" height="56" rx="12" fill="url(#kc-gold)"/>
+  <g transform="translate(256 314) scale(1.12) translate(-256 -309)">
+  <circle cx="256" cy="306" r="82" fill="none" stroke="#D59A2E" stroke-width="8"/>
+  <path d="M256 220a86 86 0 0 0 0 172z" fill="url(#kc-gold)"/>
+  <path d="M224 392V366L221 357L231 364V344L228 335L237 342V326L234 318L243 324V311L247 311C243 298 247 282 256 250C265 282 269 298 265 311L269 311V324L278 318L275 326V342L284 335L281 344V364L291 357L288 366V392Z" fill="#0E2A6B"/>
+  <rect x="180" y="388" width="152" height="10" rx="5" fill="#0E2A6B"/>
+  <path d="M251 392v-10a5 5 0 0 1 10 0v10z" fill="#F7DA86"/>
+  </g>
+</svg>

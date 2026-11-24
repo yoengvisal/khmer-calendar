@@ -1,0 +1,9 @@
+// staging flavor. Used as the PROJECT-level base configuration of
+// Debug-staging / Release-staging / Profile-staging.
+#include "../AppIdentity.xcconfig"
+
+APP_FLAVOR = staging
+APP_BUNDLE_ID_SUFFIX = .staging
+APP_DISPLAY_NAME = Khmer Calendar Stg
+// YES only for dev: lets the app call http://localhost (ATS exception).
+APP_ALLOW_LOCAL_HTTP = NO

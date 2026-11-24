@@ -1,0 +1,9 @@
+// production flavor. Used as the PROJECT-level base configuration of
+// Debug-production / Release-production / Profile-production.
+#include "../AppIdentity.xcconfig"
+
+APP_FLAVOR = production
+APP_BUNDLE_ID_SUFFIX = 
+APP_DISPLAY_NAME = Khmer Calendar
+// YES only for dev: lets the app call http://localhost (ATS exception).
+APP_ALLOW_LOCAL_HTTP = NO
